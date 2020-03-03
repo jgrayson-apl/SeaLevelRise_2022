@@ -1,0 +1,32 @@
+
+.places-panel {
+  display        : flex;
+  flex-direction : row;
+  width          : max-content;
+  background     : rgba(51, 51, 51, 0.7);
+}
+
+.places-node {
+  height   : max-content;
+  position : relative;
+  margin   : 5px;
+}
+
+.places-node:hover img {
+  box-shadow   : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.places-label {
+  font-size  : 9pt;
+  position   : absolute;
+  top        : 0;
+  left       : 6px;
+  padding    : 0 3px;
+  color      : #ddd;
+  background : rgba(51, 51, 51, 0.7);
+}
+
+.places-node:hover .places-label {
+  color      : #fff;
+  background : rgba(51, 51, 51, 1.0);
+}

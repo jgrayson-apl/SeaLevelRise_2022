@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- End Responsive -->
+    <link rel="icon" href="./assets/favicon.ico" sizes="32x32" type="image/vnd.microsoft.icon">
+    <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/css/calcite-web.min.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/css/main.css">
+    <link rel="stylesheet" href="./styles/main.css">
+    <script src="./app/dojo.js"></script>
+    <script src="https://js.arcgis.com/4.14/"></script>
+    <script>require(["Application/init"]);</script>
+  </head>
+  <body>
+
+    <!-- DETAILS -->
+    <div class="js-modal modal-overlay" data-modal="app-details-dialog">
+      <div class="modal-content column-12" aria-labelledby="modal" role="dialog">
+        <span class="js-modal-toggle esri-interactive icon-ui-close right" aria-label="close-modal"></span>
+        <h3 class="trailer-half text-blue">Critical Infrastructure and Sea Level Rise</h3>
+        <div class="panel">
+          Display critical infrastructure assets affected by sea level rise using an interactive slider that represents water levels based on
+          <a href="https://coast.noaa.gov/slrdata/" target="_blank">data and services</a>
+          from NOAA's
+          <a href="https://coast.noaa.gov/digitalcoast/" target="_blank">Digital Coast.</a>
+          This demo concept and data expand on the awesome NOAA
+          <a href="https://coast.noaa.gov/digitalcoast/tools/slr.html" target="_blank">Sea Level Rise Viewer.</a>
+        </div>
+        <div class="panel panel-white text-red leader-quarter padding-left-2 padding-right-2">
+          <div class="text-center">
+            <span class="icon-ui-notice-triangle icon-ui-flush"></span>
+            CAUTION
+            <span class="icon-ui-notice-triangle icon-ui-flush"></span>
+          </div>
+          The analysis performed in this application is for demonstration purposes ONLY.
+        </div>
+        <div class="leader-half">
+          <img src="./assets/esri_science_of_where.png" class="left">
+          <div class="text-right">
+            <button class="btn js-modal-toggle">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP NAVIGATION -->
+    <header id="header-panel" class="panel panel-dark panel-no-padding panel-no-border padding-left-1 padding-right-1">
+
+      <span class="top-nav-title text-white">
+        <span id="app-title-node"></span>
+        <mark class="label label-yellow font-size--3 margin-left-1">FOR DEMO PURPOSES ONLY</mark>
+      </span>
+
+      <nav id="scenario-nav" class="top-nav-list column-9 text-right" role="navigation">
+        <label class="leader-quarter trailer-quarter">
+          <span class="margin-right-quarter">Scenario Locations</span>
+          <select id="scenario-locations-select" class=""></select>
+          <span id="play-pause-btn" class="icon-ui-play icon-ui-white esri-interactive font-size-4 margin-left-quarter leader-quarter" title="Play / Pause"></span>
+        </label>
+      </nav>
+
+      <!-- RIGHT ALIGNED -->
+      <nav class="top-nav-list right" role="navigation">
+
+        <!-- SIGN IN NODE -->
+        <span id="sign-in-node" class="top-nav-link text-white esri-interactive icon-ui-user margin-left-1">Sign In</span>
+
+        <!-- USER NODE -->
+        <div id="user-node" class="dropdown js-dropdown margin-left-1 text-white hide">
+          <span class="top-nav-link icon-ui-user text-white margin-left-1 esri-interactive js-dropdown-toggle" tabindex="0" aria-haspopup="true" aria-expanded="false">
+            <span id="user-firstname-node"></span>
+          </span>
+          <nav class="dropdown-menu dropdown-right" role="menu">
+            <span class="dropdown-title">
+              <span id="user-fullname-node"></span>
+              <br>
+              <img id="user-thumb-node" src="">
+              <small><span id="username-node"></span></small>
+            </span>
+            <span id="sign-out-node" class="dropdown-link esri-interactive icon-ui-sign-out" role="menu-item">Sign Out</span>
+          </nav>
+        </div>
+
+        <!-- APP DETAILS -->
+        <span class="top-nav-link icon-ui-description text-white js-modal-toggle margin-left-1 esri-interactive" data-modal="app-details-dialog"></span>
+
+      </nav>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div id="main-container">
+
+      <div id="view-parent-panel">
+        <div id="view-panel" class="panel panel-dark-blue panel-no-border padding-right-0">
+          <div id="view-container" class="panel-dark panel-no-border"></div>
+        </div>
+        <div id="slr-slider-panel" class="panel panel-dark-blue panel-no-border padding-leader-2 padding-trailer-2">
+          <div id="slr-slider" class="btn-disabled"></div>
+        </div>
+      </div>
+
+      <div id="left-container" class="panel panel-dark-blue panel-no-border column-6 padding-left-0">
+        <aside id="assets-panel" class="side-nav" aria-role="complementary">
+          <div class="side-nav-title ">
+            <span class="font-size-1">Critical Infrastructure</span>
+            <span id="reset-btn" title="Reset water level..." class="btn-link link-white icon-ui-refresh right font-size--3 leader-quarter hide"></span>
+          </div>
+          <div class="padding-left-1 leader-quarter trailer-quarter">
+            <span id="asset-title" class="avenir-demi font-size-1 text-off-black"></span>
+            <span id="back-link" class="icon-ui-arrow-left-circled text-off-black leader-quarter font-size--2 margin-right-1 right esri-interactive btn-disabled">back</span>
+          </div>
+          <nav id="assets-list" role="navigation" aria-labelledby="sidenav"></nav>
+          <nav id="items-list" class="hide" role="navigation" aria-labelledby="sidenav"></nav>
+          <div class="text-center">
+            <span id="select-all" title="Select all..." class="btn-link link-off-black font-size--3">all</span>
+            <span class="text-off-black font-size--3">&nbsp;|&nbsp;</span>
+            <span id="select-none" title="Select none..." class="btn-link link-off-black font-size--3">none</span>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,406 @@
+html,
+body {
+  margin                   : 0;
+  padding                  : 0;
+  width                    : 100%;
+  height                   : 100%;
+  font-size                : 100%;
+  -webkit-text-size-adjust : 100%;
+  -moz-text-size-adjust    : 100%;
+  -ms-text-size-adjust     : 100%;
+}
+
+body {
+  display          : flex;
+  flex-direction   : column;
+  background-color : #004575;
+}
+
+body * {
+  outline : none;
+}
+
+#header-panel {
+  flex-shrink : 0;
+  flex-grow   : 0;
+  z-index     : 99;
+  box-shadow  : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#main-container {
+  flex-shrink    : 1;
+  flex-grow      : 1;
+  min-width      : 0;
+  min-height     : 0;
+  display        : flex;
+  flex-direction : row;
+}
+
+#view-parent-panel {
+  flex-shrink    : 1;
+  flex-grow      : 1;
+  min-width      : 0;
+  min-height     : 0;
+  display        : flex;
+  flex-direction : row;
+}
+
+#view-panel {
+  flex-shrink    : 1;
+  flex-grow      : 1;
+  min-width      : 0;
+  min-height     : 0;
+  display        : flex;
+  flex-direction : row;
+}
+
+#view-container {
+  flex-shrink : 1;
+  flex-grow   : 1;
+  min-width   : 0;
+  min-height  : 0;
+}
+
+#left-container {
+  flex-shrink    : 1;
+  flex-grow      : 1;
+  min-width      : 0;
+  min-height     : 0;
+  display        : flex;
+  flex-direction : column;
+}
+
+#assets-panel {
+  flex-shrink      : 1;
+  flex-grow        : 1;
+  min-width        : 0;
+  min-height       : 0;
+  border-color     : #333;
+  background-color : #efefef;
+  display          : flex;
+  flex-direction   : column;
+}
+
+#assets-panel .side-nav-title {
+  color            : #ffffff;
+  background-color : #595959;
+  border-color     : transparent;
+}
+
+#assets-panel .side-nav-title:first-of-type {
+  border-top-color : #005e95;
+}
+
+#assets-panel .side-nav-title:last-of-type {
+  border-bottom-color : #005e95;
+}
+
+#assets-panel .side-nav-link {
+  border-left : solid 6px transparent;
+}
+
+#assets-panel .side-nav-link:last-of-type {
+  /*border-bottom : solid 1px #323232;;*/
+}
+
+#assets-panel .side-nav-link.selected,
+#assets-panel .side-nav-link:hover {
+  /*background-color : #bcdaed !important;*/
+}
+
+#assets-panel .side-nav-link.text-red,
+#assets-panel .side-nav-link.text-red {
+  border-left-color : #e05563;
+  /*background-color  : #f5f2f2 !important;*/
+}
+
+#assets-panel .side-nav-link.text-red.selected,
+#assets-panel .side-nav-link.text-red:hover {
+  color            : #e05563 !important;
+  background-color : #f5eded !important;
+}
+
+#assets-panel .side-nav-link.suspended {
+  opacity           : 0.65;
+  border-left-color : #ccc;
+}
+
+#assets-list {
+  flex-shrink      : 1;
+  flex-grow        : 1;
+  min-width        : 0;
+  min-height       : 0;
+  display          : flex;
+  flex-direction   : column;
+  overflow-y       : auto;
+  background-color : #f4f4f4;
+}
+
+#asset-items-list {
+  flex-shrink : 1;
+  flex-grow   : 1;
+  min-width   : 0;
+  min-height  : 0;
+  overflow-y  : auto;
+}
+
+#items-list {
+  flex-shrink    : 1;
+  flex-grow      : 1;
+  min-width      : 0;
+  min-height     : 0;
+  display        : flex;
+  flex-direction : column;
+  overflow-y     : auto;
+}
+
+#items-list .side-nav-link {
+  padding : 20px;
+}
+
+#items-list .side-nav-link:hover {
+  background-color : #fff !important;
+}
+
+#items-list .side-nav-link .action-node {
+  opacity    : 0.0;
+  transition : all 0.5s linear;
+}
+
+#items-list .side-nav-link:hover .action-node {
+  opacity    : 1.0;
+  transition : all 0.5s linear;
+}
+
+#items-list .esri-widget__table {
+  margin-bottom : 0 !important;
+}
+
+.status-node {
+  display         : flex;
+  flex-direction  : row;
+  justify-content : space-between;
+}
+
+.status-left-items {
+  display        : flex;
+  flex-direction : row;
+}
+
+.status-symbol-node {
+
+}
+
+#user-thumb-node {
+  height         : 36px;
+  border-radius  : 18px;
+  vertical-align : middle;
+}
+
+.top-nav-link:hover, .top-nav-link:focus {
+  color               : #fff;
+  border-bottom-color : #fff;
+}
+
+#map-side-drawer .drawer-nav {
+  width          : 400px;
+  display        : flex;
+  flex-direction : column;
+}
+
+#card-panel {
+  flex-shrink : 0;
+  flex-grow   : 0;
+  min-width   : 0;
+  min-height  : 0;
+}
+
+#layer-list-container {
+  flex-shrink : 1;
+  flex-grow   : 1;
+  min-width   : 0;
+  min-height  : 0;
+  overflow-y  : scroll;
+  overflow-x  : hidden;
+}
+
+#social-links {
+  flex-shrink : 0;
+  flex-grow   : 0;
+  min-width   : 0;
+  min-height  : 0;
+}
+
+.esri-widget--button {
+  color            : #fff !important;
+  background-color : #004575 !important;
+}
+
+.view-loading-node {
+  box-shadow : none !important;
+}
+
+.view-loading-node .loader-text {
+  color       : #fff !important;
+  padding-top : 3em !important;
+}
+
+@keyframes load {
+  0%, 80%, 100% {
+    opacity    : .75;
+    box-shadow : 0 0 #e05563;
+    height     : 2rem
+  }
+
+  40% {
+    opacity    : 1;
+    box-shadow : 0 -0.5rem #e05563;
+    height     : 2.5rem
+  }
+}
+
+.loader-bars:before,
+.loader-bars:after,
+.loader-bars {
+  background : #e05563;
+}
+
+.side-nav-link:last-of-type {
+  border-bottom : solid 1px #efefef;
+}
+
+.esri-widget__heading {
+  color : #fff !important;
+}
+
+.esri-legend {
+  width            : unset !important;
+  color            : #fff !important;
+  background-color : #004575 !important;
+}
+
+.esri-attribution {
+  color            : #ddd !important;
+  background-color : rgba(89, 89, 89, 0.5) !important;
+  transition       : all 0.5s linear;
+}
+
+.esri-attribution:hover {
+  color            : #fff !important;
+  background-color : rgba(89, 89, 89, 0.9) !important;
+  transition       : all 1s linear;
+}
+
+#slr-slider-panel {
+  width       : 150px;
+  flex-shrink : 0;
+  flex-grow   : 0;
+  min-width   : 0;
+  min-height  : 0;
+}
+
+.esri-slider {
+  color            : #fff !important;
+  background-color : #004575 !important;
+}
+
+.esri-slider__max {
+  margin      : 0 0 15px 0 !important;
+  font-size   : 13pt;
+  font-weight : bold;
+}
+
+.esri-slider__min {
+  margin    : 25px 0 0 0 !important;
+  font-size : 11pt;
+}
+
+.esri-slider__tick {
+  background : rgba(255, 255, 255, 0.8) !important;
+}
+
+.esri-slider__tick-label {
+  color       : rgba(255, 255, 255, 0.8);
+  min-width   : 60px;
+  margin-left : 40px !important;
+}
+
+.esri-slider--vertical .esri-slider__label {
+  left        : auto;
+  right       : 24px;
+  text-align  : right;
+  font-weight : bolder;
+}
+
+.esri-slider--vertical .esri-slider__label-input {
+  text-align : right;
+  width      : 70px;
+}
+
+.esri-slider--vertical .esri-slider__anchor {
+  left : 3px;
+}
+
+.esri-slider__thumb {
+  border-radius : 50%;
+  width         : 24px;
+  height        : 24px;
+  left          : -12px;
+  top           : -12px;
+}
+
+.esri-slider--vertical .esri-slider__track {
+  width         : 10px;
+  border-radius : 5px;
+  border        : 2px solid #009cf7;
+}
+
+.esri-slider__segment-1 {
+  background-color : #005e95;
+}
+
+.esri-slider__segment-0 {
+  background-color : #009cf7;
+}
+
+#scenario-nav label {
+  height      : 100%;
+  display     : inline-flex;
+  align-items : center;
+}
+
+@keyframes pulse {
+  0% {
+    color : #fff;
+  }
+  50% {
+    color : #cd0d27;
+  }
+  100% {
+    color : #fff;
+  }
+}
+
+.icon-ui-pause {
+  animation : pulse infinite 3s !important;
+}
+
+.color-1 {
+  color : rgba(0, 38, 115, 1.0);
+}
+
+.color-2 {
+  color : rgba(0, 38, 115, 1.0);
+}
+
+.color-3 {
+  color : rgba(0, 76, 168, 1.0);
+}
+
+.color-4 {
+  color : rgba(0, 110, 255, 1.0);
+}
+
+.color-5 {
+  color : rgba(191, 233, 255, 1.0);
+}

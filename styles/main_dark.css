@@ -1,0 +1,235 @@
+html,
+body {
+  margin   : 0;
+  padding  : 0;
+  width    : 100%;
+  height   : 100%;
+  overflow : hidden;
+}
+
+.configurable-application--loading {
+  text-align          : center;
+  display             : block;
+  height              : 100%;
+  width               : 100%;
+  overflow            : hidden;
+  background-color    : #fff;
+  background-position : center center;
+  background-repeat   : no-repeat;
+  background-image    : url(../assets/NG_Logo_Spin.gif)
+}
+
+.top-nav {
+  /*border           : none;*/
+  /*background-image : url(https://developers.arcgis.com/assets/img/features/geocoding/hero.jpg);*/
+}
+
+#user-thumb-node {
+  height         : 36px;
+  border-radius  : 18px;
+  vertical-align : middle;
+}
+
+.top-nav-link:hover, .top-nav-link:focus {
+  color               : #fff;
+  border-bottom-color : #fff;
+  text-decoration     : none;
+}
+
+#group_title * {
+  vertical-align : middle;
+}
+
+#group-thumb {
+  height : 36px;
+}
+
+#main_container {
+  height  : calc(100vh - 75px);
+  margin  : 0;
+  padding : 0;
+  display : flex;
+}
+
+#group_container {
+  width     : 10%;
+  margin    : 0;
+  order     : 0;
+  flex-grow : 25;
+}
+
+#map_container {
+  width     : 10%;
+  margin    : 0;
+  padding   : 0;
+  order     : 1;
+  flex-grow : 75;
+}
+
+#map-node,
+#scene-node {
+  width  : 100%;
+  height : 100%;
+}
+
+.panel-toggle {
+  z-index    : 99;
+  position   : absolute;
+  cursor     : pointer;
+  left       : 0;
+  top        : calc(50% - 15px);
+  padding    : 4px 0;
+  color      : #f4cf05;
+  background : #000;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.panel-toggle:hover {
+  color : #ffda05;
+}
+
+#notifications-node {
+  position : sticky;
+  left     : 5px;
+  bottom   : 5px;
+}
+
+#notifications-node .alert {
+  opacity : 0.9;
+}
+
+#items-list {
+  max-height : 50vh;
+  overflow   : auto;
+}
+
+.card-wide button img {
+  vertical-align : middle;
+}
+
+.card-image-caption img {
+  vertical-align : middle;
+}
+
+#group-items-list {
+  height   : calc(100vh - 250px);
+  overflow : auto;
+}
+
+.esri-layer-list__item-actions-menu-item--active,
+.esri-layer-list__item-actions-menu-item--active:hover {
+  color            : #f4cf05 !important;
+  background-color : #333 !important;
+}
+
+.docs-toggle-spacer {
+  padding-top    : 1.2rem;
+  padding-bottom : 0.825rem;
+}
+
+.item-card {
+  position   : relative;
+  background : #555;
+  /*box-shadow : 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 16px 0 rgba(0, 0, 0, 0.05);*/
+  box-shadow : 0 0 0 1px rgba(244, 207, 5, 0.1), 0 0 16px 0 rgba(244, 207, 5, 0.05);
+}
+
+.card-wide-image-wrap {
+  margin     : auto 0 auto 10px;
+  box-shadow : 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-card-snippet {
+  /*height        : 3em;
+  width         : 200px;
+  overflow      : hidden;
+  white-space   : nowrap;
+  text-overflow : ellipsis;*/
+}
+
+.esri-layer-list * {
+  outline : none;
+}
+
+.esri-ui-corner .esri-expand .esri-widget--panel,
+.esri-ui-corner .esri-expand .esri-widget--panel-height-only,
+.esri-ui-corner .esri-component.esri-widget--panel {
+  width : 400px !important;
+}
+
+.tab-title:hover,
+.tab-title:focus {
+  background-image : linear-gradient(to top, transparent 94%, #f4cf05 96%, #f4cf05 100%);
+}
+
+.tab-nav a,
+.modal-content a,
+.card a,
+.text-blue,
+.link-blue,
+.icon-ui-blue:before {
+  color : #f4cf05;
+}
+
+.btn {
+  background-color : #f4cf05;
+  border-color     : #f4cf05;
+}
+
+.btn:hover {
+  color            : #f4cf05;
+  background-color : #333;
+}
+
+.btn-clear {
+  color            : #f4cf05;
+  background-color : #333;
+  border-color     : #f4cf05;
+}
+
+.btn-clear:hover {
+  color            : #333;
+  background-color : #f4cf05;
+  border-color     : #f4cf05;
+}
+
+.top-nav-link:hover, .top-nav-link:focus {
+  color               : #f4cf05;
+  border-bottom-color : #f4cf05;
+  text-decoration     : none;
+}
+
+.esri-widget,
+.esri-widget-button,
+.esri-menu,
+.esri-popup__main-container,
+.esri-popup .esri-popup__pointer-direction,
+.esri-popup .esri-popup__button,
+.esri-button,
+.esri-widget a {
+  color : #f4cf05;
+}
+
+.toggle-switch-input:checked + .toggle-switch-track {
+  border-color     : #f4cf05;
+  background-color : #f4cf05;
+}
+
+.view-loading-node {
+  box-shadow : none !important;
+}
+
+.view-loading-node .loader-text {
+  color       : #fff;
+  padding-top : 0.5rem;
+}
+
+.view-loading-node .loader-bars-ng {
+  padding         : 0;
+  margin          : 0;
+  height          : 60px;
+  background-size : cover;
+  background      : url(../assets/NG_Logo_Spin.gif) center center no-repeat;
+}
+
+
