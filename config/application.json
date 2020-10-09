@@ -6,7 +6,7 @@
   "webscene": "",
   "portalUrl": "https://www.arcgis.com",
   "oauthappid": "hrFP8yDGOiGFx4ub",
-  "proxyUrl": "https://apl.esri.com/proxy/DotNet/proxy.ashx",
+  "proxyUrl": "",
   "units": "dual",
   "helperServices": {
     "geometry": {

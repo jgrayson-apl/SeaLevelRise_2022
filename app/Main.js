@@ -11,7 +11,7 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.​
+  limitations under the License.
 */
 
 define([
@@ -120,10 +120,9 @@ define([
           view.when(() => {
             this.viewReady(this.base.config, firstItem, view).then(() => {
               domClass.remove(document.body, this.CSS.loading);
-            });
+            }).catch(console.error);
           });
         }, console.error);
-        // });
       });
     },
 
@@ -148,7 +147,7 @@ define([
       });
 
       // USER SIGN IN //
-      return this.initializeUserSignIn(view).always(() => {
+      return this.initializeUserSignIn().catch(console.warn).then(() => {
 
         // POPUP DOCKING OPTIONS //
         view.popup.dockEnabled = true;
@@ -163,7 +162,6 @@ define([
             if(waterLevel){
               return domConstruct.create("div", {
                 className: "font-size-0",
-                //innerHTML: `Water level due to sea level rise: <span class="text-red">${waterLevel} feet</span>`
                 innerHTML: `This location will be affected by <span class="text-red">${waterLevel} feet</span> of sea level rise.`
               });
             } else {
@@ -235,30 +233,29 @@ define([
      *
      * @returns {*}
      */
-    initializeUserSignIn: function(view){
+    initializeUserSignIn: function(){
 
       const checkSignInStatus = () => {
-        return IdentityManager.checkSignInStatus(this.base.portal.url).then(userSignIn);
+        return IdentityManager.checkSignInStatus(this.base.portal.url).then(userSignIn).catch(userSignOut).then();
       };
       IdentityManager.on("credential-create", checkSignInStatus);
-      IdentityManager.on("credential-destroy", checkSignInStatus);
 
       // SIGN IN NODE //
-      const signInNode = dom.byId("sign-in-node");
-      const userNode = dom.byId("user-node");
+      const signInNode = document.getElementById("sign-in-node");
+      const userNode = document.getElementById("user-node");
 
       // UPDATE UI //
       const updateSignInUI = () => {
         if(this.base.portal.user){
-          dom.byId("user-firstname-node").innerHTML = this.base.portal.user.fullName.split(" ")[0];
-          dom.byId("user-fullname-node").innerHTML = this.base.portal.user.fullName;
-          dom.byId("username-node").innerHTML = this.base.portal.user.username;
-          dom.byId("user-thumb-node").src = this.base.portal.user.thumbnailUrl || "./assets/loader-ie9.gif";
-          domClass.add(signInNode, "hide");
-          domClass.remove(userNode, "hide");
+          document.getElementById("user-firstname-node").innerHTML = this.base.portal.user.fullName.split(" ")[0];
+          document.getElementById("user-fullname-node").innerHTML = this.base.portal.user.fullName;
+          document.getElementById("username-node").innerHTML = this.base.portal.user.username;
+          document.getElementById("user-thumb-node").src = this.base.portal.user.thumbnailUrl;
+          signInNode.classList.add('hide');
+          userNode.classList.remove('hide');
         } else {
-          domClass.remove(signInNode, "hide");
-          domClass.add(userNode, "hide");
+          signInNode.classList.remove('hide');
+          userNode.classList.add('hide');
         }
         return promiseUtils.resolve();
       };
@@ -269,28 +266,28 @@ define([
         return this.base.portal.load().then(() => {
           this.emit("portal-user-change", {});
           return updateSignInUI();
-        }).otherwise(console.warn);
+        }).catch(console.warn).then();
       };
 
       // SIGN OUT //
       const userSignOut = () => {
         IdentityManager.destroyCredentials();
         this.base.portal = new Portal({});
-        this.base.portal.load().then(() => {
+        return this.base.portal.load().then(() => {
           this.base.portal.user = null;
           this.emit("portal-user-change", {});
           return updateSignInUI();
-        }).otherwise(console.warn);
+        }).catch(console.warn).then();
 
       };
 
       // USER SIGN IN //
-      on(signInNode, "click", userSignIn);
+      signInNode.addEventListener("click", userSignIn);
 
       // SIGN OUT NODE //
-      const signOutNode = dom.byId("sign-out-node");
+      const signOutNode = document.getElementById("sign-out-node");
       if(signOutNode){
-        on(signOutNode, "click", userSignOut);
+        signOutNode.addEventListener("click", userSignOut);
       }
 
       return checkSignInStatus();
@@ -330,12 +327,12 @@ define([
         this.initializeAssetLayers(view).then(() => {
 
           // WHEN VIEW FINISHES UPDATING THE FIRST TIME //
-          watchUtils.whenNotOnce(view, "updating", () => {
+          // watchUtils.whenNotOnce(view, "updating", () => {
             // SET INITIAL SLR WATER LEVEL //
             this.setWaterLevel(0);
             // ENABLE SLR SLIDER //
             domClass.remove(slrSliderContainer, "btn-disabled");
-          });
+          // });
 
         });
       });
@@ -577,8 +574,7 @@ define([
             labelFormatFunction: feetLabel
           }],
           layout: "vertical",
-          rangeLabelsVisible: true,
-          labelsVisible: true,
+          visibleElements: { labels: true, rangeLabels: true },
           labelFormatFunction: feetLabel
         });
 
@@ -741,36 +737,41 @@ define([
           let waterLevel = 0;
           let affectedFeatures = null;
 
-          let queryHandle = null;
-          const updateAnalysis = () => {
-            queryHandle && (!queryHandle.isFulfilled()) && queryHandle.cancel();
 
-            clearStatusUI();
-            //highlight && highlight.remove();
+          const updateAnalysis = promiseUtils.debounce(() => {
+            return promiseUtils.create((resolve, reject) => {
 
-            if(!assetLayerView.suspended){
-              watchUtils.whenFalseOnce(assetLayerView, "updating", () => {
+              clearStatusUI();
 
-                queryHandle = assetLayerView.queryFeatures({
-                  geometry: view.extent,
-                  where: `water_level BETWEEN 0 AND ${waterLevel}`
-                }).then(affectedFS => {
+              if(!assetLayerView.suspended){
+                watchUtils.whenFalseOnce(assetLayerView, "updating", () => {
 
-                  affectedFeatures = affectedFS.features;
-                  const affectedCount = affectedFeatures.length;
-                  countNode.innerHTML = number.format(affectedCount);
+                  assetLayerView.queryFeatures({
+                    geometry: view.extent,
+                    where: `water_level BETWEEN 0 AND ${waterLevel}`
+                  }).then(affectedFS => {
 
-                  domClass.toggle(statusNode, "text-red", (affectedCount > 0));
-                  domClass.toggle(itemListNode, "hide", (affectedCount === 0));
+                    affectedFeatures = affectedFS.features;
+                    const affectedCount = affectedFeatures.length;
+                    countNode.innerHTML = number.format(affectedCount);
 
-                  highlight && highlight.remove();
-                  const objectIds = affectedFeatures.map(f => f.attributes[objectIdField]);
-                  highlight = assetLayerView.highlight(objectIds);
+                    domClass.toggle(statusNode, "text-red", (affectedCount > 0));
+                    domClass.toggle(itemListNode, "hide", (affectedCount === 0));
 
+                    highlight && highlight.remove();
+                    const objectIds = affectedFeatures.map(f => f.attributes[objectIdField]);
+                    highlight = assetLayerView.highlight(objectIds);
+
+                    resolve();
+                  });
                 });
-              });
-            }
-          };
+              }
+            });
+          });
+
+          const _ignoreAbortErrors = error => {
+            if(error.name !== 'AbortError'){ console.error(error); }
+          }
 
           //
           //
@@ -779,7 +780,7 @@ define([
             leftItemsClickEvt && leftItemsClickEvt.stopPropagation();
             domClass.toggle(visibilityNode, "icon-ui-checkbox-checked icon-ui-checkbox-unchecked");
             assetLayer.visible = domClass.contains(visibilityNode, "icon-ui-checkbox-checked");
-            updateAnalysis();
+            updateAnalysis().catch(_ignoreAbortErrors);
           });
 
           //
@@ -805,7 +806,7 @@ define([
           //
           this.on("slr-change", options => {
             waterLevel = options.waterLevel;
-            updateAnalysis();
+            updateAnalysis().catch(_ignoreAbortErrors);
           });
 
 

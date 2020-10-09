@@ -11,7 +11,7 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.​
+  limitations under the License.
 */
 
 (function () {
@@ -27,7 +27,7 @@
     packages: [
       { name: "calcite", location: "https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/js", main: "calcite-web.min" },
       { name: "config", location: distPath + "/config" },
-      { name: "ApplicationBase", location: appPath + "/application-base-js-master", main: "ApplicationBase" },
+      { name: "ApplicationBase", location: distPath + "/application-base-js-master", main: "ApplicationBase" },
       { name: "Application", location: distPath + "/app", main: "Main" }
     ]
   };
