@@ -21,14 +21,6 @@ define([
   "dojo/i18n!./nls/resources",
   "ApplicationBase/support/itemUtils",
   "ApplicationBase/support/domHelper",
-  "dojo/_base/Color",
-  "dojo/colors",
-  "dojo/number",
-  "dojo/date/locale",
-  "dojo/on",
-  "dojo/query",
-  "dojo/dom",
-  "dojo/dom-class",
   "dojo/dom-construct",
   "esri/identity/IdentityManager",
   "esri/request",
@@ -36,33 +28,18 @@ define([
   "esri/core/watchUtils",
   "esri/core/promiseUtils",
   "esri/portal/Portal",
-  "esri/PopupTemplate",
-  "esri/layers/Layer",
-  "esri/layers/GraphicsLayer",
-  "esri/layers/FeatureLayer",
   "esri/layers/support/RasterFunction",
-  "esri/geometry/Extent",
-  "esri/geometry/Multipoint",
-  "esri/geometry/Polygon",
-  "esri/geometry/geometryEngine",
-  "esri/Graphic",
   "esri/symbols/support/symbolUtils",
   "esri/widgets/Feature",
   "esri/widgets/Slider",
   "esri/widgets/Home",
   "esri/widgets/Search",
-  "esri/widgets/LayerList",
   "esri/widgets/Legend",
-  "esri/widgets/ScaleBar",
-  "esri/widgets/Compass",
-  "esri/widgets/BasemapGallery",
   "esri/widgets/Expand"
-], function(calcite, declare, ApplicationBase, i18n, itemUtils, domHelper,
-            Color, colors, number, locale, on, query, dom, domClass, domConstruct,
-            IdentityManager, esriRequest, Evented, watchUtils, promiseUtils, Portal,
-            PopupTemplate, Layer, GraphicsLayer, FeatureLayer, RasterFunction,
-            Extent, Multipoint, Polygon, geometryEngine, Graphic, symbolUtils,
-            Feature, Slider, Home, Search, LayerList, Legend, ScaleBar, Compass, BasemapGallery, Expand){
+], function(calcite, declare, ApplicationBase, i18n, itemUtils, domHelper, domConstruct,
+            IdentityManager, esriRequest, Evented, watchUtils, promiseUtils,
+            Portal, RasterFunction, symbolUtils,
+            Feature, Slider, Home, Search, Legend, Expand){
 
   return declare([Evented], {
 
@@ -119,7 +96,7 @@ define([
         itemUtils.createView(viewProperties).then(view => {
           view.when(() => {
             this.viewReady(this.base.config, firstItem, view).then(() => {
-              domClass.remove(document.body, this.CSS.loading);
+              document.body.classList.remove(this.CSS.loading);
             }).catch(console.error);
           });
         }, console.error);
@@ -135,15 +112,15 @@ define([
     viewReady: function(config, item, view){
 
       // TITLE //
-      dom.byId("app-title-node").innerHTML = config.title;
+      document.getElementById("app-title-node").innerHTML = config.title;
 
       // LOADING //
-      const updating_node = domConstruct.create("div", { className: "view-loading-node loader" });
-      domConstruct.create("div", { className: "loader-bars" }, updating_node);
-      domConstruct.create("div", { className: "loader-text font-size--3 text-white", innerHTML: "Updating..." }, updating_node);
-      view.ui.add(updating_node, "bottom-right");
+      const updatingNode = domConstruct.create("div", { className: "view-loading-node loader" });
+      domConstruct.create("div", { className: "loader-bars" }, updatingNode);
+      domConstruct.create("div", { className: "loader-text font-size--3 text-white", innerHTML: "Updating..." }, updatingNode);
+      view.ui.add(updatingNode, "bottom-right");
       watchUtils.init(view, "updating", (updating) => {
-        domClass.toggle(updating_node, "is-active", updating);
+        updatingNode.classList.toggle("is-active", updating);
       });
 
       // USER SIGN IN //
@@ -310,9 +287,9 @@ define([
       // HIGHLIGHT OPTIONS //
       //
       view.highlightOptions = {
-        color: Color.named.red,
+        color: 'red',
         fillOpacity: 0.3,
-        haloColor: Color.named.red,
+        haloColor: 'red',
         haloOpacity: 0.8
       };
 
@@ -328,10 +305,10 @@ define([
 
           // WHEN VIEW FINISHES UPDATING THE FIRST TIME //
           // watchUtils.whenNotOnce(view, "updating", () => {
-            // SET INITIAL SLR WATER LEVEL //
-            this.setWaterLevel(0);
-            // ENABLE SLR SLIDER //
-            domClass.remove(slrSliderContainer, "btn-disabled");
+          // SET INITIAL SLR WATER LEVEL //
+          this.setWaterLevel(0);
+          // ENABLE SLR SLIDER //
+          slrSliderContainer.classList.remove("btn-disabled");
           // });
 
         });
@@ -353,7 +330,7 @@ define([
       });
       aoiLayer.load().then(() => {
 
-        const scenarioLocationsSelect = dom.byId("scenario-locations-select");
+        const scenarioLocationsSelect = document.getElementById("scenario-locations-select");
 
         const locationsQuery = aoiLayer.createQuery();
         locationsQuery.set({ orderByFields: ["Label ASC"] });
@@ -389,7 +366,7 @@ define([
             return list.set(locationLabel, aoiFeature);
           }, new Map());
 
-          on(scenarioLocationsSelect, "change", () => {
+          scenarioLocationsSelect.addEventListener("change", () => {
             goToSelectedScenarioLocation();
           });
 
@@ -401,10 +378,10 @@ define([
             }
           };
 
-          const playPauseBtn = dom.byId("play-pause-btn");
-          on(playPauseBtn, "click", () => {
-            domClass.toggle(playPauseBtn, "icon-ui-play icon-ui-pause");
-            playEnabled = domClass.contains(playPauseBtn, "icon-ui-pause");
+          const playPauseBtn = document.getElementById("play-pause-btn");
+          playPauseBtn.addEventListener("click", () => {
+            playPauseBtn.classList.toggle("icon-ui-play icon-ui-pause");
+            playEnabled = playPauseBtn.classList.contains("icon-ui-pause");
             if(playEnabled){
               selectNextScenarioLocation();
               window.requestAnimationFrame(goToSelectedScenarioLocation);
@@ -559,7 +536,7 @@ define([
         //
         // SLR SLIDER //
         //
-        const slrSliderContainer = dom.byId("slr-slider");
+        const slrSliderContainer = document.getElementById("slr-slider");
         const slrSlider = new Slider({
           container: slrSliderContainer,
           min: 0,
@@ -602,42 +579,42 @@ define([
      */
     initializeAssetLayers: function(view){
 
-      const assetsList = dom.byId("assets-list");
-      const itemsList = dom.byId("items-list");
-      const backLink = dom.byId("back-link");
-      const assetTitle = dom.byId("asset-title");
-      const selectAll = dom.byId("select-all");
-      const selectNode = dom.byId("select-none");
+      const assetsList = document.getElementById("assets-list");
+      const itemsList = document.getElementById("items-list");
+      const backLink = document.getElementById("back-link");
+      const assetTitle = document.getElementById("asset-title");
+      const selectAll = document.getElementById("select-all");
+      const selectNode = document.getElementById("select-none");
 
       this.enableFeaturesList = assetLayerTitle => {
         if(assetLayerTitle != null){
           assetTitle.innerHTML = assetLayerTitle;
-          domClass.add(assetsList, "hide");
-          domClass.remove(itemsList, "hide");
-          domClass.remove(backLink, "btn-disabled");
+          assetsList.classList.add("hide");
+          itemsList.classList.remove("hide");
+          backLink.classList.remove("btn-disabled");
         } else {
           assetTitle.innerHTML = "";
-          domClass.remove(assetsList, "hide");
-          domClass.add(itemsList, "hide");
-          domClass.add(backLink, "btn-disabled");
+          assetsList.classList.remove("hide");
+          itemsList.classList.add("hide");
+          backLink.classList.add("btn-disabled");
         }
       };
 
-      on(backLink, "click", () => {
+      backLink.addEventListener("click", () => {
         this.enableFeaturesList();
       });
 
-      on(selectAll, "click", () => {
-        query(".status-left-items").forEach(node => {
-          if(domClass.contains(query(".icon-ui-dark-blue", node)[0], "icon-ui-checkbox-unchecked")){
+      selectAll.addEventListener("click", () => {
+        document.querySelectorAll(".status-left-items").forEach(node => {
+          if(node.querySelector(".icon-ui-dark-blue").classList.contains('icon-ui-checkbox-unchecked')){
             node.click();
           }
         });
       });
 
-      on(selectNode, "click", () => {
-        query(".status-left-items").forEach(node => {
-          if(domClass.contains(query(".icon-ui-dark-blue", node)[0], "icon-ui-checkbox-checked")){
+      selectNode.addEventListener("click", () => {
+        document.querySelectorAll(".status-left-items").forEach(node => {
+          if(node.querySelector(".icon-ui-dark-blue").classList.contains('icon-ui-checkbox-checked')){
             node.click();
           }
         });
@@ -648,15 +625,15 @@ define([
         switch(options.status){
           case "suspended":
           case "not suspended":
-            domClass.toggle(view.container, "is-active", false);
+            view.container.classList.toggle("is-active", false);
             this.enableFeaturesList();
             break;
           case "start":
-            domClass.toggle(view.container, "is-active", true);
+            view.container.classList.toggle("is-active", true);
             this.enableFeaturesList();
             break;
           case "end":
-            domClass.toggle(view.container, "is-active", view.updating);
+            view.container.classList.toggle("is-active", view.updating);
             break;
         }
       });
@@ -691,15 +668,15 @@ define([
      */
     initializeAssetLayer: function(view, assetLayer, placement){
 
-      const assetsList = dom.byId("assets-list");
-      const itemsList = dom.byId("items-list");
+      const assetsList = document.getElementById("assets-list");
+      const itemsList = document.getElementById("items-list");
 
       const statusNode = domConstruct.create("div", { className: "status-node side-nav-link font-size-0 btn-disabled" }, assetsList, placement || "last");
 
       const leftItems = domConstruct.create("span", { className: "status-left-items" }, statusNode);
       const visibilityNode = domConstruct.create("span", { className: "icon-ui-dark-blue" }, leftItems);
-      domClass.toggle(visibilityNode, "icon-ui-checkbox-checked", assetLayer.visible);
-      domClass.toggle(visibilityNode, "icon-ui-checkbox-unchecked", !assetLayer.visible);
+      visibilityNode.classList.toggle("icon-ui-checkbox-checked", assetLayer.visible);
+      visibilityNode.classList.toggle("icon-ui-checkbox-unchecked", !assetLayer.visible);
 
       const symbolNode = domConstruct.create("span", { className: "status-symbol-node margin-right-half" }, leftItems);
       const defaultSymbol = (assetLayer.renderer.type === "simple") ? assetLayer.renderer.symbol : (assetLayer.renderer.defaultSymbol || assetLayer.renderer.uniqueValueInfos[0].symbol);
@@ -714,8 +691,8 @@ define([
 
       const clearStatusUI = () => {
         countNode.innerHTML = "--";
-        domClass.remove(statusNode, "text-red");
-        domClass.add(itemListNode, "hide");
+        statusNode.classList.remove("text-red");
+        itemListNode.classList.add("hide");
       };
 
       return assetLayer.load().then(() => {
@@ -727,16 +704,17 @@ define([
         const objectIdField = assetLayer.objectIdField;
 
         return view.whenLayerView(assetLayer).then(assetLayerView => {
-          domClass.remove(statusNode, "btn-disabled");
+          statusNode.classList.remove("btn-disabled");
 
           watchUtils.init(assetLayerView, "suspended", suspended => {
-            domClass.toggle(statusNode, "suspended", suspended);
+            statusNode.classList.toggle("suspended", suspended);
           });
 
           let highlight = null;
           let waterLevel = 0;
           let affectedFeatures = null;
 
+          const countFormatter = new Intl.NumberFormat('default');
 
           const updateAnalysis = promiseUtils.debounce(() => {
             return promiseUtils.create((resolve, reject) => {
@@ -753,19 +731,19 @@ define([
 
                     affectedFeatures = affectedFS.features;
                     const affectedCount = affectedFeatures.length;
-                    countNode.innerHTML = number.format(affectedCount);
+                    countNode.innerHTML = countFormatter.format(affectedCount);
 
-                    domClass.toggle(statusNode, "text-red", (affectedCount > 0));
-                    domClass.toggle(itemListNode, "hide", (affectedCount === 0));
+                    statusNode.classList.toggle("text-red", (affectedCount > 0));
+                    itemListNode.classList.toggle("hide", (affectedCount === 0));
 
                     highlight && highlight.remove();
                     const objectIds = affectedFeatures.map(f => f.attributes[objectIdField]);
                     highlight = assetLayerView.highlight(objectIds);
 
                     resolve();
-                  });
+                  }).catch(reject);
                 });
-              }
+              } else { resolve(); }
             });
           });
 
@@ -776,17 +754,18 @@ define([
           //
           //
           //
-          on(leftItems, "click", leftItemsClickEvt => {
+          leftItems.addEventListener("click", leftItemsClickEvt => {
             leftItemsClickEvt && leftItemsClickEvt.stopPropagation();
-            domClass.toggle(visibilityNode, "icon-ui-checkbox-checked icon-ui-checkbox-unchecked");
-            assetLayer.visible = domClass.contains(visibilityNode, "icon-ui-checkbox-checked");
+            visibilityNode.classList.toggle("icon-ui-checkbox-checked");
+            visibilityNode.classList.toggle("icon-ui-checkbox-unchecked");
+            assetLayer.visible = visibilityNode.classList.contains("icon-ui-checkbox-checked");
             updateAnalysis().catch(_ignoreAbortErrors);
           });
 
           //
           //
           //
-          on(itemListNode, "click", itemListClickEvt => {
+          itemListNode.addEventListener("click", itemListClickEvt => {
             itemListClickEvt && itemListClickEvt.stopPropagation();
             domConstruct.empty(itemsList);
 
@@ -858,182 +837,3 @@ define([
   });
 });
 
-
-/*polygonsToMultiPart: function(polygons){
-  return new Polygon({
-    spatialReference: polygons[0].spatialReference,
-    rings: polygons.reduce((parts, polygon) => {
-      return polygon ? parts.concat(polygon.rings) : [];
-    }, [])
-  });
-}*/
-
-
-// RESET ASSET LAYERS WATER LEVEL //
-/*const resetAssetLayers = () => {
-  this.ASSETS_LAYERS.map(assetLayer => {
-    view.whenLayerView(assetLayer).then(assetLayerView => {
-      assetLayer.queryFeatures({ geometry: view.extent, outFields: ["OBJECTID", "water_level"] }).then(affectedFS => {
-        const updatedFeatureInfos = affectedFS.features.map((nullFeature, nullFeatureIdx) => {
-          return {
-            attributes: {
-              "OBJECTID": nullFeature.attributes.OBJECTID,
-              "water_level": null
-            }
-          }
-        });
-        assetLayer.applyEdits({ updateFeatures: updatedFeatureInfos }).then(applyEditsResults => {
-          console.info("RESET: ", applyEditsResults);
-          assetLayer.refresh();
-        });
-      });
-    });
-  });
-};*/
-
-// WATER LEVEL RESET BUTTON //
-/* const resetBtn = dom.byId("reset-btn");
- const updateRestBtn = () => {
-   if(this.base.portal.user == null){
-     domClass.add(resetBtn, "hide");
-   } else {
-     domClass.toggle(resetBtn, "hide", !this.base.portal.user.username.startsWith("jgrayson"));
-   }
- };
- this.on("portal-user-change", updateRestBtn);
- on(resetBtn, "click", resetAssetLayers);
- updateRestBtn();*/
-
-//const nullFeatureList = new Map();
-/*const updateNullFeatures = () => {
-         //if(assetLayer.visible && !this.isLayerOutsideScaleRange(assetLayer, view.scale)){
-         if(!assetLayerView.suspended){
-           return watchUtils.whenFalseOnce(assetLayerView, "updating").then(() => {
-
-             const featuresQuery = assetLayerView.createQuery();
-             featuresQuery.set({
-               geometry: view.extent,
-               where: "water_level IS NULL",
-               returnGeometry: true
-             });
-             return assetLayerView.queryFeatures(featuresQuery).then(featureSet => {
-               if(featureSet.features.length){
-
-                 featureSet.features.forEach(feature => {
-                   const oid = feature.attributes.OBJECTID;
-                   if(!nullFeatureList.has(oid)){
-                     nullFeatureList.set(oid, feature);
-                   }
-                 });
-
-                 const nullFeatures = Array.from(nullFeatureList.values());
-                 if(nullFeatures.length){
-
-                   return this.analyzeWaterLevel({ layer: assetLayer, nullFeatures: nullFeatures }).then(updatedOIDs => {
-                     if(updatedOIDs.length){
-
-                       updatedOIDs.forEach(updatedOID => {
-                         nullFeatureList.delete(updatedOID);
-                       });
-
-                       return watchUtils.whenTrueOnce(assetLayerView, "updating").then(() => {
-                         return watchUtils.whenFalseOnce(assetLayerView, "updating").then(() => {
-                           return updatedOIDs.length;
-                         });
-                       });
-                     } else {
-                       nullFeatureList.clear();
-                       return promiseUtils.resolve(0);
-                     }
-                   });
-
-                 } else {
-                   return 0;
-                 }
-               } else {
-                 return 0;
-               }
-             });
-           });
-         } else {
-           return promiseUtils.resolve(0);
-         }
-       };*/
-
-
-/*initializeWaterLevelOverlay: function(view){
-
-     const waterLevelLayer = view.map.layers.find(layer => {
-       return (layer.title === "SLR Water Level");
-     });
-     if(waterLevelLayer){
-
-       return waterLevelLayer.load().then(() => {
-
-         this.analyzeWaterLevel = ({ layer, nullFeatures }) => {
-
-           const queryGeometry = new Multipoint({
-             spatialReference: { "wkid": view.spatialReference.wkid },
-             points: nullFeatures.map(feature => {
-               return [feature.geometry.x, feature.geometry.y]
-             })
-           });
-
-           return esriRequest(`${waterLevelLayer.url}/getSamples`, {
-             query: {
-               geometry: JSON.stringify(queryGeometry.toJSON()),
-               geometryType: "esriGeometryMultipoint",
-               returnFirstValueOnly: true,
-               pixelSize: "12,12",
-               interpolation: "RSP_NearestNeighbor",
-               f: "json"
-             }
-           }).then(samplesResponse => {
-             //console.info("getSamples: ", layer.title, nullFeatures.length);
-
-             const samples = samplesResponse.data.samples;
-             const samplesByIndex = samples.reduce((list, sample) => {
-               return list.set(sample.locationId, sample);
-             }, new Map());
-
-             const updatedFeatureInfos = nullFeatures.map((nullFeature, nullFeatureIdx) => {
-               const sample = samplesByIndex.get(nullFeatureIdx);
-               return {
-                 attributes: {
-                   "OBJECTID": nullFeature.attributes.OBJECTID,
-                   "water_level": sample ? Number(sample.value) : -1
-                 }
-               }
-             });
-
-             return layer.applyEdits({ updateFeatures: updatedFeatureInfos }).then(applyEditsResults => {
-               return applyEditsResults.updateFeatureResults.map(updatedFeature => {
-                 return updatedFeature.objectId;
-               });
-             });
-
-           }, (error) => {
-             //console.error("Error getSamples: ", layer.title, nullFeatures.length, error);
-
-             const updatedFeatureInfos = nullFeatures.map((nullFeature, nullFeatureIdx) => {
-               return {
-                 attributes: {
-                   "OBJECTID": nullFeature.attributes.OBJECTID,
-                   "water_level": -1
-                 }
-               }
-             });
-
-             return layer.applyEdits({ updateFeatures: updatedFeatureInfos }).then(applyEditsResults => {
-               return applyEditsResults.updateFeatureResults.map(updatedFeature => {
-                 return updatedFeature.objectId;
-               });
-             });
-           });
-         };
-
-       });
-     } else {
-       return promiseUtils.resolve();
-     }
-   }*/
