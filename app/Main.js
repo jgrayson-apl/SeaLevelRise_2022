@@ -325,9 +325,7 @@ define([
       //
       // LOCATIONS OF INTEREST
       //
-      const aoiLayer = view.map.layers.find(layer => {
-        return (layer.title === "Scenario Locations");
-      });
+      const aoiLayer = view.map.layers.find(layer => { return (layer.title === "Scenario Locations"); });
       aoiLayer.load().then(() => {
 
         const scenarioLocationsSelect = document.getElementById("scenario-locations-select");
@@ -419,9 +417,7 @@ define([
      */
     initializeWaterLevelSlider: function(view){
 
-      const waterLevelLayer = view.map.layers.find(layer => {
-        return (layer.title === "Sea Level Rise Water Level");
-      });
+      const waterLevelLayer = view.map.layers.find(layer => { return (layer.title === "Sea Level Rise Water Level"); });
       return waterLevelLayer.load().then(() => {
 
         this.initializeWaterLevelInfo(waterLevelLayer);
@@ -811,27 +807,24 @@ define([
 
       this.getWaterLevel = location => {
 
-        return esriRequest(`${waterLevelLayer.url}/getSamples`, {
-          query: {
-            geometry: JSON.stringify(location.toJSON()),
-            geometryType: "esriGeometryPoint",
-            returnFirstValueOnly: true,
-            pixelSize: "12,12",
-            interpolation: "RSP_NearestNeighbor",
-            f: "json"
-          }
-        }).then(samplesResponse => {
+        // https://developers.arcgis.com/javascript/latest/api-reference/esri-rest-imageService.html#getSamples
+        // https://developers.arcgis.com/javascript/latest/api-reference/esri-rest-support-ImageSampleParameters.html
+
+        return waterLevelLayer.getSamples({
+          geometry: location.toJSON(),
+          returnFirstValueOnly: true,
+          pixelSize: "12,12",
+          interpolation: "nearest"
+        }).then((samplesResponse) => {
           const samples = samplesResponse.data.samples;
           if(samples.length){
             return Number(samples[0].value);
           } else {
             return null;
           }
-        }, (error) => {
-          return null;
         });
-      };
 
+      };
     }
 
   });
